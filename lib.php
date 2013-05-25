@@ -5,6 +5,16 @@
  * @package    local
  * Author       michael.egli@phz.ch
  */
+/**
+ * Author pp@patrickpollet.net
+ * 1) nows runs also with Moodle >2.3
+ * 2) added downloading of fields of type image
+ * 3) removed many PHP notices 
+[Sat May 25 16:41:52 2013] [error] [client 127.0.0.1] PHP Notice:  Undefined variable: section in /var/www/moodle24/local/eduweb_databasefiledownload/lib.php on line 80, referer: http://localhost/moodle24/mod/data/field.php
+[Sat May 25 16:41:52 2013] [error] [client 127.0.0.1] PHP Notice:  Trying to get property of non-object in /var/www/moodle24/local/eduweb_databasefiledownload/lib.php on line 80, referer: http://localhost/moodle24/mod/data/field.php
+[Sat May 25 16:41:52 2013] [error] [client 127.0.0.1] PHP Warning:  mkdir(): File exists in /var/www/moodle24/local/eduweb_databasefiledownload/lib.php on line 111, referer: http://localhost/moodle24/mod/data/field.php
+
+ */
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -62,7 +72,7 @@ class eduweb_databasefiledownload {
         $countfiles = 0;
         $fields = $DB->get_records('data_fields', array('dataid'=>$data->id), 'id');
         $files = array();
-        $images = array();
+        $images = array(); //added PP
         foreach ($fields as $field) {
 
             if ($field->type == 'file'  || $field->type == 'picture') {
@@ -77,7 +87,8 @@ class eduweb_databasefiledownload {
                     $c = $DB->get_records_sql($select, $where);
                     $content = $DB->get_record('data_content', array('fieldid'=>$fieldobj->field->id, 'recordid'=>$record->id));
                     $uname = $this->encodeFilenames($record->lastname." ".$record->firstname);
-                    $subfolder = $this->encodeFilenames($course->shortname)."/".$this->encodeFilenames($section->name)."/".$this->encodeFilenames($cm->name)."/".$this->encodeFilenames($fieldobj->field->name);
+                    $subfolder = $this->encodeFilenames($course->shortname)."/".$this->encodeFilenames($cm->name)."/".
+                                 $this->encodeFilenames($fieldobj->field->name);
                     $folder = $this->encodeFilenames($uname);
                     if (isset($_GET['nosort'])) {$subfolder = "";$folder="";} else {}
                     if ($field->type == 'file')
@@ -108,7 +119,8 @@ class eduweb_databasefiledownload {
        foreach ($files as $key => $myfile) {
 
            $path = $source_path."/".$myfile['folder'];
-           mkdir($path,0777,true);
+           if (!file_exists($path))
+	           mkdir($path,0777,true);
 
                 // Prepare file record object
                 $fileinfo = array(
@@ -125,7 +137,8 @@ class eduweb_databasefiledownload {
                     // Get and copy file
                     $file = $fs->get_file($fileinfo['contextid'], $fileinfo['component'], $fileinfo['filearea'],$fileinfo['itemid'], $fileinfo['filepath'], $fileinfo['filename']);
                     $path = $path."/".$myfile['subfolder'];
-                    mkdir($path,0777,true);
+                    if (!file_exists($path))
+                    	mkdir($path,0777,true);
                     $f = $file->get_filename();
                     $cp = $file->copy_content_to($path."/".$myfile['id']."-".$this->encodeFilenames($f));
                     $countfiles++;
@@ -134,11 +147,12 @@ class eduweb_databasefiledownload {
 
 
        }
-       
+       //added PP for images processing
        foreach ($images as $key => $myfile) {
        
        	$path = $source_path."/".$myfile['folder'];
-       	mkdir($path,0777,true);
+       	if (!file_exists($path))
+       		mkdir($path,0777,true);
        
        	// Prepare file record object
        	$fileinfo = array(
@@ -155,7 +169,8 @@ class eduweb_databasefiledownload {
        		// Get and copy file
        		$file = $fs->get_file($fileinfo['contextid'], $fileinfo['component'], $fileinfo['filearea'],$fileinfo['itemid'], $fileinfo['filepath'], $fileinfo['filename']);
        		$path = $path."/".$myfile['subfolder'];
-       		mkdir($path,0777,true);
+       		if (!file_exists($path))
+       			mkdir($path,0777,true);
        		$f = $file->get_filename();
        		$cp = $file->copy_content_to($path."/".$myfile['id']."-".$this->encodeFilenames($f));
        		$countfiles++;
