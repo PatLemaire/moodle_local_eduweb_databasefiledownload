@@ -1,6 +1,5 @@
 <?php
 /**
- * Global settings for the plugin.
  *
  * @package    local
  * Author       michael.egli@phz.ch
@@ -15,7 +14,7 @@ ini_set('display_errors','off');
 
 // modul data is required for this local plugin
 if (is_file($CFG->dirroot . '/mod/data/view.php')) {} else {
-    print_error('modul data was not found');
+    print_error('module data was not found');
 }
 
 // execute database file download functions

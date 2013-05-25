@@ -1,9 +1,12 @@
 <?php
 /**
- * Global settings for the plugin.
+ * Inject proper javascript to the view page 
+ * to add a tab and two menu items in settings
+ * if fields of type file or picture are present.
  *
  * @package    local
  * Author      michael.egli@phz.ch
+ * Author      pp@patrickpollet.net
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
@@ -42,7 +45,7 @@ ob_end_clean();
 $fields = $DB->get_records('data_fields', array('dataid'=>$data->id), 'id');
 $filescount=0;
 foreach ($fields as $field) {
-    if ($field->type == 'file') {
+    if ($field->type == 'file' || $field->type == 'picture') { //picture type added by PP
         $fieldobj = data_get_field($field, $data);
         reset($records);
         foreach($records as $record) {
