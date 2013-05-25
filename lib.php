@@ -212,7 +212,7 @@ class eduweb_databasefiledownload {
 
                 ob_end_clean();
                 ob_start();
-              //  $this->deleteDirectory($temppath);
+                $this->deleteDirectory($temppath);
                 ob_end_clean();
                 exit;
             }
