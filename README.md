@@ -1,13 +1,13 @@
 Description :
 -------------
 
-This plugin is a fork of  Moodle 2.3 plugin by Michël Egi, https://moodle.org/plugins/view.php?plugin=local_eduweb_databasefiledownload that allow downloading as a zip file of files attached to a database activity in unsorted of sorted mode.
+This plugin is a fork of  Moodle 2.3 plugin by Michaël Egi, https://moodle.org/plugins/view.php?plugin=local_eduweb_databasefiledownload that allow downloading as a zip file of files attached to a database activity in unsorted of sorted mode.
 
 We added :
 
 1) now runs under Moodle 2.4
 
-2) the ability to also download also picture fields in the zip
+2) the ability to also download picture fields in the zip
 
 3) a french translation (by Luiggi Sansonetti)
 
