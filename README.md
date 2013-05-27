@@ -25,7 +25,9 @@ Installation :
 Go to your moodle installation directory and clone the github repo by :
 
  cd /var/www/moodle
+ 
  git clone  https://github.com/patrickpollet/moodle_local_eduweb_databasefiledownload.git  local/eduweb_databasefiledownload
+ 
  echo 'local/eduweb_databasefiledownload' >> .git/info/exclude
  
 
