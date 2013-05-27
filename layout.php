@@ -6,13 +6,15 @@
  *
  * @package    local
  * Author      michael.egli@phz.ch
+ *   original coding
  * Author      pp@patrickpollet.net
+ *    simplified code ; removed inclusion of mod/data/view.php to fetch
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
 
 
-$id = required_param('id', PARAM_INT);
+$id = required_param('id', PARAM_INT); // this is the instance id , not the course module id 
 $cm = get_coursemodule_from_id('', $id, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
 $context = get_context_instance(CONTEXT_MODULE, $cm->id);
@@ -30,28 +32,13 @@ if ($cm->modname == 'data') {} else {
     die;
 }
 
-// include and execute original module data view
-// we retrive following vars
-// $cm = coursemodule context
-// $course = course
-// $data = course module data
-// $records = all module records from sql execution
-ob_start();
-require_once($CFG->dirroot . '/mod/data/view.php');
-ob_end_clean();
-
 
 // check if module has files for downloading
-$fields = $DB->get_records('data_fields', array('dataid'=>$data->id), 'id');
+$fields = $DB->get_records('data_fields', array('dataid'=>$cm->instance), 'id');
 $filescount=0;
 foreach ($fields as $field) {
     if ($field->type == 'file' || $field->type == 'picture') { //picture type added by PP
-        $fieldobj = data_get_field($field, $data);
-        reset($records);
-        foreach($records as $record) {
              $filescount++;
-        }
-
     }
 }
 
